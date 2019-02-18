@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550505862283.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A2CE8C49",
+    "lastKnownWriteTime" : 1550506813,
+    "last_content_update" : 1550506813376,
+    "path" : "D:/02-Estudos/01-MOOCs/01-Coursera/02-JHS Mastering Software Development in R Specialization/Course05/msdr/R/GeomTimeline.R",
+    "project_path" : "R/GeomTimeline.R",
+    "properties" : {
+        "cursorPosition" : "41,0",
+        "scrollLine" : "25",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
