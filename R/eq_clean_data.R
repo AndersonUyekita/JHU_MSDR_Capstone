@@ -56,11 +56,24 @@ eq_clean_data <- function(file_name) {
        # Removing Tsunamis observations.
        df <- df %>% filter(is.na(FLAG_TSUNAMI))
 
+       # Converting Character in Numeric. EARTHQUAKE.
+       df <- df %>% mutate(EQ_PRIMARY = as.numeric(EQ_PRIMARY))
+
+       # Converting Character in Numeric. TOTAL DEATH
+       df <- df %>% mutate(TOTAL_DEATHS = as.numeric(TOTAL_DEATHS))
+
+       # Removing all Earthquakes with EQ_PRIMARY equal to NaN.
+       df <- df[!is.na(df$EQ_PRIMARY),]
+
+       # Removing all Earthquakes with no DATE.
+       df <- df[!is.na(df$DATE),]
+
+       # Converting NaN in zero.
+       df$TOTAL_DEATHS[is.na(df$TOTAL_DEATHS)] <- 0
+
+
+       return(df)
 }
 
 
 df <- eq_clean_data(file_name = 'signif.txt')
-
-
-df
-
