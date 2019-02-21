@@ -8,20 +8,19 @@
 #   Date:      15/02/2019                                                                #
 #   Version:   1.0                                                                       #
 #                                                                                        #
-#   Function:  geom_timeline                                                             #
+#   Function:  theme_msdr                                                                #
 #                                                                                        #
 ##########################################################################################
 
-#' geom_timeline
+#' theme_msdr
 #'
-#' This method acts behind de scenes creating a layer to plot the output of GeomTimeline function.
+#' I used this theme to change the overall visuals of the ggplot2 to became more likely to the
+#' examples.
 #'
-#' @importFrom ggplot2 layer
+#' @importFrom ggplot2 theme element_blank element_line
 #'
-#' @inheritParams ggplot2::geom_point
-#'
-#' @return Creates a layer to plot the GeomTimeline output function. Updates the
-#'         graphic inserting new content/visuals.
+#' @return Remove the gray background, the grid, the panel border, etc. Turns the
+#'         plot clean.
 #'
 #' @examples
 #'
@@ -42,24 +41,27 @@
 #'         geom_timeline(aes(x = DATE,
 #'                           y = COUNTRY,
 #'                           size = EQ_PRIMARY,
-#'                           color = TOTAL_DEATHS))}
+#'                           color = TOTAL_DEATHS)) +
+#'
+#'     theme_msdr()}
 #'
 #' @export
-geom_timeline <- function(mapping = NULL,
-                           data = NULL,
-                           stat = "identity",
-                           position = "identity",
-                           na.rm = FALSE,
-                           show.legend = NA,
-                           inherit.aes = TRUE, ...){
+theme_msdr <- function() {
 
-       ggplot2::layer(geom = GeomTimeline,
-                      mapping = mapping,
-                      data = data,
-                      stat = stat,
-                      position = position,
-                      show.legend = show.legend,
-                      inherit.aes = inherit.aes,
-                      params = list(na.rm = na.rm,...)
-       )
+ggplot2::theme(axis.line.x  = ggplot2::element_line(colour = "black",
+                                                    size = 1,
+                                                    linetype = "solid"),
+               axis.ticks.x.bottom = ggplot2::element_line(colour = "black",
+                                                           size = 1,
+                                                           linetype = "solid"),
+               panel.grid.major.y = ggplot2::element_line(colour = "gray",
+                                                          size = 2,
+                                                          linetype = "solid"),
+               axis.text.y.left = ggplot2::element_text(size = 14),            # Countries names
+               legend.position = "bottom",
+               axis.ticks.y = ggplot2::element_blank(),
+               panel.background = ggplot2::element_blank(),
+               plot.background = ggplot2::element_blank(),
+               panel.border = ggplot2::element_blank(),
+               axis.title.y.left = ggplot2::element_blank())
 }

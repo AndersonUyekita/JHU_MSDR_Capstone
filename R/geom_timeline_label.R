@@ -8,19 +8,19 @@
 #   Date:      15/02/2019                                                                #
 #   Version:   1.0                                                                       #
 #                                                                                        #
-#   Function:  geom_timeline                                                             #
+#   Function:  geom_timeline_label                                                       #
 #                                                                                        #
 ##########################################################################################
 
-#' geom_timeline
+#' geom_time_label
 #'
-#' This method acts behind de scenes creating a layer to plot the output of GeomTimeline function.
-#'
-#' @importFrom ggplot2 layer
+#' This method acts behind de scenes creating a layer to plot the output of GeomTimelinelabel function.
 #'
 #' @inheritParams ggplot2::geom_point
 #'
-#' @return Creates a layer to plot the GeomTimeline output function. Updates the
+#' @importFrom ggplot2 layer
+#'
+#' @return Creates a layer to plot the GeomTimelineLabel output function. Updates the
 #'         graphic inserting new content/visuals.
 #'
 #' @examples
@@ -42,18 +42,25 @@
 #'         geom_timeline(aes(x = DATE,
 #'                           y = COUNTRY,
 #'                           size = EQ_PRIMARY,
-#'                           color = TOTAL_DEATHS))}
+#'                           color = TOTAL_DEATHS)) +
+#'
+#'             geom_timeline_label(aes(x = DATE,
+#'                                     label = LOCATION,
+#'                                     y = COUNTRY,
+#'                                     mag = EQ_PRIMARY,
+#'                                     n_max = 3))}
 #'
 #' @export
-geom_timeline <- function(mapping = NULL,
-                           data = NULL,
-                           stat = "identity",
-                           position = "identity",
-                           na.rm = FALSE,
-                           show.legend = NA,
-                           inherit.aes = TRUE, ...){
 
-       ggplot2::layer(geom = GeomTimeline,
+geom_timeline_label <- function(mapping = NULL,
+                          data = NULL,
+                          stat = "identity",
+                          position = "identity",
+                          na.rm = FALSE,
+                          show.legend = NA,
+                          inherit.aes = TRUE, ...){
+
+       ggplot2::layer(geom = GeomTimelineLabel,
                       mapping = mapping,
                       data = data,
                       stat = stat,

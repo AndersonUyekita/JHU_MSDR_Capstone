@@ -1,146 +1,108 @@
 ##########################################################################################
 #                                                                                        #
 #   Author:    Anderson Hitoshi Uyekita                                                  #
-#   Project:   Mastering Software Development in R Specialization Capstone Project       #
+#                                                                                        #
+#   Course:    Mastering Software Development in R Specialization                        #
+#   Project:   Capstone Project                                                          #
+#                                                                                        #
 #   Date:      15/02/2019                                                                #
 #   Version:   1.0                                                                       #
 #                                                                                        #
-#   Class:                                                                               #
+#   Function:  GeomTimeline                                                              #
 #                                                                                        #
 ##########################################################################################
 
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#' @importFrom ggplot2 ggproto aes draw_key_polygon Geom
-#'
-#'
-#'
-#'
-#'
-#' @export
+## COLOPHON
+#
+# I have defined all parameters of GeomTimeline before creating it.
+
 
 # REQUIRED_AES
-required_aes = c("x")
+required_aes = c("x") # DATE
 
+# OPTIONAL_AES
+optional_aes = c('y',     # COUNTRY
+                 'color', # "Density"
+                 'size',  # Point size
+                 'alpha') # Transparency
 
-optional_aes = c('y',
-                 'color',
-                 'size',
-                 'alpha')
+# DEFAULT_AES
+default_aes = ggplot2::aes(pch = 21,         # Do not work without it.
+                           colour = "black", # Default color
+                           size = 0.01,      # Very small circle
+                           fill = 'grey',    # Default fill color
+                           alpha = 0.4,      # Default transparency
+                           stroke = 1)       # Line thickness
 
-
-default_aes = ggplot2::aes(shape = 21,
-                           colour = "black",
-                           size = 0.1,
-                           fill = 'grey',
-                           alpha = 0.4,
-                           stroke = 1)
-
-
-
-
-draw_panel <- function(data,
-                       panel_params,
+# DRAW_PANEL
+draw_panel <- function(data,           # Data from aes()
+                       panel_params,   # panel_params
                        coord) {
 
-
+       # Attemp to decrease the size of the circles.
        data$size <- data$size/max(data$size)
 
-
-
-       # General configuration of Timeline
-
-       ht <- 0.1      # Height Position
-       vt <- 0.1      # Vertical Position
-       pad <- 0.05    # Border
-       thick <- 0.02  # Markers length
-
-       # Creating the timeline markers.
-       year_markers <- c(year_min,
-                         round(year_min + (year_range)/3, 0),
-                         round(year_min + 2*(year_range)/3, 0),
-                         year_max) # Years to be plotted.
-
-       # Default gpar for timeline.
-       gpar <- gpar(col = 'black',  # Line Color
-                    lty = 1,        # Line Type
-                    lwd = 2)        # Line Width
-
-       # Creating the horizontal line.
-       horizontal_line <- segmentsGrob(x0 = 0 + pad,
-                                       x1 = 1.0 - pad,
-                                       y0 = ht,
-                                       y1 = ht,
-                                       gp = gpar)
-
-       # Initializing the tree.
-       timeline <- gTree(children = gList(horizontal_line))
-
-       # Creating the thicks.
-       for (i in 1:4) {
-
-              # Creating each marker.
-              marker <- segmentsGrob(x0 = vt + (i - 1)*(0.8/3),
-                                     x1 = vt + (i - 1)*(0.8/3),
-                                     y0 = ht - thick,
-                                     y1 = ht,
-                                     gp = gpar)
-
-              # Adding to the tree.
-              timeline <- gTree(children = gList(timeline, marker))
-
-              # Plotting the year label.
-              textGrob(label = year_markers[i],
-                       x =  vt + (i - 1)*(0.8/3),
-                       y =  ht - thick - 0.01,
-                       just = "top") -> text_marker
-
-              # Adding to the tree.
-              timeline <- gTree(children = gList(timeline, text_marker))
-       }
-
-       # Adding label to the timeline.
-       date_label <- textGrob(label = "DATE",
-                              x =  0.5,
-                              y =  ht/3,
-                              just = "bottom")
-
-       timeline <- gTree(children = gList(timeline, date_label))
-
-
-
-
-
-
+       # Changing the "scale" to adapt the plot in the graphic.
        coords <- coord$transform(data, panel_params)
 
-
-       circle <- grid::circleGrob(
-              coords$x,
-              coords$y,
-              r = coords$size/15,
-              gp = grid::gpar(col =      alpha(coords$colour, coords$alpha),
-                              fill =     alpha(coords$colour, coords$alpha),
-                              alpha =    coords$alpha,
-                              fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                              lwd =      coords$stroke * .stroke / 2
-              )
-       )
-
-       grid::gTree(children = grid::gList(timeline, circle))
-
+       # Plotting circles as earthquekes.
+       grid::circleGrob(
+              coords$x,           # The converted X axis
+              coords$y,           # For each country there are a line in y axis.
+              r = coords$size/50, # Radius of the circle. According to the EQ_PRIMARY.
+              gp = grid::gpar(col =      scales::alpha(coords$colour, coords$alpha), # Color with transparency and scaled
+                              fill =     scales::alpha(coords$colour, coords$alpha), # Color with transparency and scaled
+                              alpha =    coords$alpha,   # Transparency
+                              fontsize = coords$size,    # Fontsize
+                              lwd =      coords$stroke)) # Line width
 }
 
-GeomTimeline <- ggplot2::ggproto(`_class`   = "GeomTimeline",
-                                 `_inherit` = ggplot2::Geom,
+#' GeomTimeline
+#'
+#' This functions is the Geom in charge to creates the visuals. You do not need to use the geom_timeline
+#' to have the benefits of this function as you can see in the examples. Just uses the `ggplot2::layer`.
+#'
+#' @importFrom ggplot2 ggproto aes draw_key_point Geom
+#'
+#' @importFrom grid circleGrob gpar
+#'
+#' @importFrom scales alpha
+#'
+#' @return Creates the visuals to be plotted by the geom_timeline.
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Creating a Dataset.
+#' df_example <- eq_clean_data(file_name = 'inst/extdata/signif.txt') %>%
+#'     dplyr::filter(YEAR > 2010,
+#'                   COUNTRY %in% c("CHINA",
+#'                                  "JAPAN")) %>%
+#'             dplyr::select(DATE,
+#'                           COUNTRY,
+#'                           EQ_PRIMARY,
+#'                           TOTAL_DEATHS,
+#'                           LOCATION)
+#'
+#' # Plotting using layer.
+#' ggplot2::ggplot() +
+#'     ggplot2::layer(geom = GeomTimeline,
+#'                    mapping = aes(x = df_example$DATE,
+#'                                  y = df_example$COUNTRY,
+#'                                  size = df_example$EQ_PRIMARY,
+#'                                  color = df_example$TOTAL_DEATHS),
+#'                    data = df_example,
+#'                    stat = 'identity',
+#'                    position = 'identity',
+#'                    show.legend = NA,
+#'                    inherit.aes = TRUE,
+#'                    params = list(na.rm = FALSE))}
+#'
+#' @export
+GeomTimeline <- ggplot2::ggproto(`_class`     = "GeomTimeline",
+                                 `_inherit`   = ggplot2::Geom,
                                  required_aes = required_aes,
                                  optional_aes = optional_aes,
-                                 default_aes = default_aes,
-                                 draw_key = ggplot2::draw_key_point,
-                                 draw_panel = draw_panel)
+                                 default_aes  = default_aes,
+                                 draw_key     = ggplot2::draw_key_point,
+                                 draw_panel   = draw_panel)
