@@ -1,0 +1,74 @@
+---
+title: "eq_location_data"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example](#example)
+
+## 1. Introduction {#intro}
+
+This function creates a new column with the earthquake `LOCATION`. The function `eq_clean_data` uses it behind the scenes, so it is not necessary to call this function after call `eq_clean_data`.
+
+## Example {#example}
+
+Piping a raw data to creates a LOCATION column.
+
+```{r, message=FALSE,warning=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Printing some columns.
+df %>%
+       eq_location_clean() %>%
+              # Selecting some features.
+              select(YEAR,
+                     COUNTRY,
+                     LOCATION,
+                     EQ_PRIMARY,
+                     TOTAL_DEATHS) %>% 
+                     # Filtering.
+                     filter(YEAR > 1990 &
+                            YEAR < 2019) %>%
+                            # Show the first 10 rows.
+                            head(10) %>%
+                                   # Enhance table visualization.
+                                   kable()
+```
+
+As you can see, the `LOCATION` column has only cities in Title Case mode. 

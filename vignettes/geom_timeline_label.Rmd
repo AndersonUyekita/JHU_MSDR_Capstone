@@ -1,0 +1,92 @@
+---
+title: "geom_timeline_label"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  
+  options(warn=-1)
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+library(ggplot2)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example](#example_1)
+
+## 1. Introduction {#intro}
+
+The `geom_timeline_label` is a complementary `geom` to aggregate notations to the `geom_timeline`. Using this `geom` you can add labels to the `n_max` most deadly earthquake. The configuration is almost the same of geom_timeline.
+
+* mag: The magnitude of the earthquake;
+* label: The Location of the earthquake;
+* n_max: Number of earthquake to be highlighted using the notation;
+* x axis: This is the temporal axis.
+* y axis: Each county has your own line, it is not possible to mix countries in a single y axis.
+
+## Example 1 {#example_1}
+
+Let's plot the earthquake from 1900 to 2000, which occured in `CHINA` and `TURKEY`.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Cleaning the data and filtering.
+df %>% 
+       eq_clean_data() %>%
+       
+              filter(COUNTRY %in% c('CHINA','TURKEY'),
+                     YEAR >= 1900 &
+                     YEAR <= 2000) %>%
+              # Creating a ggplot object
+              ggplot() + 
+                     # Using the new Geom
+                     geom_timeline(aes(x     = DATE,
+                                       y     = COUNTRY,
+                                       size  = EQ_PRIMARY,
+                                       color = TOTAL_DEATHS)) +
+                            
+                            # Adding notation.
+                            geom_timeline_label(aes(x = DATE,
+                                                    y = COUNTRY,
+                                                    mag = EQ_PRIMARY,
+                                                    label = LOCATION,
+                                                    n_max = 10)) + 
+       
+                                   # Adding theme.
+                                   theme_msdr() + 
+                                          # Editing the legends' titles 
+                                          labs(size = "Richter scale value",
+                                               color = "# deaths")
+```
+

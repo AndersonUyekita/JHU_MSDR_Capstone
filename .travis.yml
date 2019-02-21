@@ -1,5 +1,17 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+# Sources
+#
+# How to eliminate the `Note` issue of devtools::check when add .travis.yml in the repository.
+#
+# https://github.com/craigcitro/r-travis
+# - Adding .travis.yml to your .Rbuildignore.
+#
+# General informatin about travis.
+#
+# https://docs.travis-ci.com/user/languages/r
+#
+# I have used the template available here:
+# https://github.com/craigcitro/r-travis/wiki/Porting-to-native-R-support-in-Travis
 
-language: R
+language: r
 sudo: false
 cache: packages

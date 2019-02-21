@@ -49,7 +49,7 @@ draw_panel <- function(data,           # Data from aes()
        grid::circleGrob(
               coords$x,           # The converted X axis
               coords$y,           # For each country there are a line in y axis.
-              r = coords$size/50, # Radius of the circle. According to the EQ_PRIMARY.
+              r = coords$size/25, # Radius of the circle. According to the EQ_PRIMARY.
               gp = grid::gpar(col =      scales::alpha(coords$colour, coords$alpha), # Color with transparency and scaled
                               fill =     scales::alpha(coords$colour, coords$alpha), # Color with transparency and scaled
                               alpha =    coords$alpha,   # Transparency

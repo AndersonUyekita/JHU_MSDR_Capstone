@@ -1,0 +1,89 @@
+---
+title: "eq_map"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example 1](#example_1)
+- [3. Example 2](#example_2)
+
+## 1. Introduction {#intro}
+
+This function plots circles on OpenStreetMaps, which represents earthquakes. When you click in it appaers a popup, which shows a single information (that you define as `annot_col`).
+
+## Example  {#example_1}
+
+Plotting circles and popup Date of earthquake.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Ploting all earthquakes from 1500 to 1700.
+df %>% 
+       # Converting data, cleaning and creating.
+       eq_clean_data() %>%
+              #Filtering.
+              filter(YEAR > 1500 &
+                     YEAR < 1700) %>%
+                            # Adding circles and popups.
+                            eq_map(annot_col = 'DATE')
+```
+
+The popups shows the `DATE` when you click the circle.
+
+
+## Example 2 {#example_2}
+
+Popup showing the Location of earthquake.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Ploting all earthquakes from 1500 to 1700.
+df %>% 
+       # Converting data, cleaning and creating.
+       eq_clean_data() %>%
+              #Filtering.
+              filter(YEAR > 1000 &
+                     YEAR < 2019,
+                     COUNTRY %in% 'CHILE') %>%
+                            # Adding circles and popups.
+                            eq_map(annot_col = 'LOCATION')
+
+```
+
+In this example I have selected the earthquakes in Chile. The function has autozoom to fit the circles in the view.

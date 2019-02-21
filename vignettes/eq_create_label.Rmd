@@ -1,0 +1,75 @@
+---
+title: "eq_create_label"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example 1](#example_1)
+- [3. Example 2](#example_2)
+
+
+## 1. Introduction {#intro}
+
+This function compounds a new information to be displayed in a popup of Leaflet package. For this reason, the dataset should have `LOCATION`, `EQ_PRIMARY` and `DATE`.
+
+
+## Example 1 {#example_1}
+
+The next example only show the content of each popup of Leaflet map.
+
+```{r, message=FALSE,warning=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Display the informaiton of each popup.
+df %>% eq_create_label() %>% head() %>% kable()
+```
+
+## Example 2 {#example_2}
+
+This example shows the complete case of plotting a popup with Location, Magnitude and date.
+
+```{r, message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Display the informaiton of each popup.
+df %>% 
+       # Cleaninig the data.
+       eq_clean_data() %>%
+              # Creating new content.
+              dplyr::mutate(popup_text = eq_create_label(.)) %>%
+                     # Plotting new content inside of popup.
+                     eq_map(annot_col = "popup_text")
+```

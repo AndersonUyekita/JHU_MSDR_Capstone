@@ -24,6 +24,7 @@ library(magrittr)
 library(dplyr)
 library(readr)
 library(kableExtra)
+library(msdr)
 ```
 
 ## Table of Contents
@@ -86,7 +87,7 @@ The `eq_clean_data` creates the DATE variable binding the columns YEAR, MONTH, a
 
 [lubridate_url]: https://lubridate.tidyverse.org
 
-```{r}
+```{r, message=FALSE,warning=FALSE}
 # Creating a new feature.
 df <- df %>%
        mutate(DATE = lubridate::ymd(paste(df$YEAR,      # YEAR column
