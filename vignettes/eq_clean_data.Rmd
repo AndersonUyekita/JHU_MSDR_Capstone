@@ -1,0 +1,148 @@
+---
+title: "eq_clean_data"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{eq_clean_data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Loading the Data](#load_data)
+- [3. Creating New Features](#new_features)
+- [4. Conversion Process](#conversion)
+- [5. Cleaning Process](#cleaning)
+- [6. Example 1](#example_1)
+- [7. Example 2](#example_2)
+
+## 1. Introduction {#intro}
+
+
+This function has two behaviours:
+
+1) When you assign a file to load, and;
+
+```
+# Loading the 'signif.txt' file.
+eq_clean_data(file_name = 'signif.txt')
+```
+
+2) When you pipe a dataset already loaded.
+
+```
+# Pipe.
+readr::read_delim("signif.txt",
+                  delim = "\t") %>% eq_clean_data()
+```
+
+## 2. Loading the data {#load_data}
+
+This function also loads the Earthquake database from NOAA.
+
+```
+#{r, message=FALSE,warning=FALSE, echo=FALSE}
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = "../inst/extdata/signif.txt",   # file's names
+                                      delim = '\t',       # Kind of delimiter
+                                      col_names = TRUE,   #
+                                      progress = FALSE,   #
+                                      col_types = readr::cols()) #)
+
+# Printing the first 5 rows.
+head(df) %>%
+       select(I_D, YEAR, LOCATION_NAME, EQ_PRIMARY, TOTAL_DEATHS) %>% 
+              kable()
+```
+
+As you can see, there are several observations with NA values.
+
+
+## 3. Creating new features {#new_features}
+
+The `eq_clean_data` creates the DATE variable binding the columns YEAR, MONTH, and DAY. All this using the [Lubridate][lubridate_url] package.
+
+[lubridate_url]: https://lubridate.tidyverse.org
+
+```
+#{r}
+# Creating a new feature.
+df <- df %>%
+       mutate(DATE = lubridate::ymd(paste(df$YEAR,      # YEAR column
+                                          df$MONTH,     # MONTH column
+                                          df$DAY,       # DAY column
+                                          sep = "/")))  # YYYY/MM/DD
+```
+
+## 4. Conversion Process {#conversion}
+
+I have converted  the class of some features:
+
+* `TOTAL_DEATHS` to numeric;
+* `EQ_PRIMARY` to numeric;
+* All `NA`'s of `TOTAL_DEATHS` in zeros.
+
+## 5. Cleaning Process {#cleaning}
+
+I have removed:
+
+* All observations flagged as Tsunami, and;
+* All observations with no Date.
+
+## 6. Example 1 {#example_1}
+
+How to load a `txt` file.
+
+```
+#{r, message=FALSE, warning=FALSE}
+
+# Load the package
+library(msdr)
+
+# Define as file_name the txt file.
+df <- eq_clean_data(file_name = '../inst/extdata/signif.txt')
+
+# Dimensions of the loaded dataframe.
+dim(df)
+```
+
+
+## 7. Example 2 {#example_2}
+
+Piping a dataset to the `eq_clean_data`.
+
+```
+#{r, message=FALSE, warning=FALSE}
+
+# Load the package
+library(msdr)
+
+# Piping a read_delim with eq_clean_data.
+readr::read_delim("../inst/extdata/signif.txt",
+                  delim = "\t") %>%
+       
+              eq_clean_data() -> df
+
+# Dimensions of the loaded dataframe.
+dim(df)
+```
