@@ -86,9 +86,10 @@ Most of earthquake records in Japan are concentrated between 1900 and 2000.
 
 ## Example 2 {#example_2}
 
+The earthquake record of 2018. Simple comparison.
 
 ```{r}
-# List of countries in Europe and "West Asia".
+# List of countries in Europe and "West Asia". This is not an exhaustive list.
 eurasia <- c('SPAIN','GREECE','TURKEY','PORTUGAL','RUSSIA','FRANCE','MACEDONIA','BULGARIA',
              'ALBANIA','GEORGIA','ITALY','SLOVENIA','UK','CYPRUS','UKRAINE','CROATIA','AUSTRIA')
 
@@ -97,9 +98,9 @@ df %>%
        eq_clean_data() %>%
               # Creating a new feature.
               mutate(CONTINENT = case_when(COUNTRY %in% eurasia ~ "EURASIA",
-                                          !(COUNTRY %in% eurasia) ~ "REST")) %>%
+                                          !(COUNTRY %in% eurasia) ~ "WORLD")) %>%
                      # Filtering.
-                     filter(YEAR >= 2009 &
+                     filter(YEAR >= 2018 &
                             YEAR <= 2019) %>%
               
                             # Creating a ggplot object

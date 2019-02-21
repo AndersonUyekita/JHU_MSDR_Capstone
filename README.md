@@ -11,17 +11,24 @@
     * Instructor: Roger D. Peng
     * Instructor: Brooke Anderson
 
-#### RPubs
+#### Installation
 
+You can use this package installing it by the use of [`devtools`][url_devtools] library from R.
 
+```
+# R terminal
+devtools::install_github("AndersonUyekita/JHU_MSDR_Capstone")
+```
 
-#### Bookdown
-
-
+[url_devtools]: https://cran.r-project.org/web/packages/devtools/index.html
 
 #### Vignettes
 
+I have disclosed the principal Vignette in the RPubs.
 
+#### Bookdown
+
+_Underconstruction._
 
 ********************************************************************************
 

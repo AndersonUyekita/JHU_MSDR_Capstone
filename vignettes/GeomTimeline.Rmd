@@ -1,0 +1,76 @@
+---
+title: "GeomTimeline"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  
+  options(warn=-1)
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+library(ggplot2)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example](#example)
+
+## 1. Introduction {#intro}
+
+This function acts behind the scenes creating all the visuals to be displayed by the `geom_timeline`.
+
+Although this function is wrapped by the `geom_timeline` you can still use it by the use of `ggplot2::layer`.
+
+## Example {#example}
+
+Using `ggplot2::layer` to plot the visuals of `GeomTimeline`.
+
+```{r,message=FALSE,warning=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Cleaning and Creating LOCATION column.
+df_clean <- df %>% eq_clean_data() %>% filter(COUNTRY %in% c('CANADA','USA','MEXICO'))
+
+# Plotting using layer.
+ggplot2::ggplot() +
+     ggplot2::layer(geom = GeomTimeline,
+                    mapping = aes(x = DATE,
+                                  y = COUNTRY,
+                                  size = EQ_PRIMARY,
+                                  color = TOTAL_DEATHS),
+                    data = df_clean,
+                    stat = 'identity',
+                    position = 'identity',
+                    show.legend = NA,
+                    inherit.aes = TRUE,
+                    params = list(na.rm = FALSE)) + theme_msdr()
+```

@@ -1,0 +1,89 @@
+---
+title: "GeomTimelineLabel"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  
+  options(warn=-1)
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+library(ggplot2)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example](#example)
+
+## 1. Introduction {#intro}
+
+This `geom_*` performs the labels annotation on the `geom_timeline` plots.
+
+## Example {#example}
+
+Using `ggplot2::layer` to plot the visuals of `GeomTimelineLabel`. 
+
+```{r,message=FALSE,warning=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Cleaning and Creating LOCATION column.
+df_clean <- df %>% eq_clean_data() %>% filter(COUNTRY %in% c('CHILE', 'COLOMBIA','ECUADOR',
+                                                             'PERU', 'PARAGUAY','URUGUAY',
+                                                             'BRAZIL', 'BOLIVIA', 'ARGENTINA'))
+
+# Creating a simple geom_timeline plot.
+simple_plot <- df_clean %>% 
+       ggplot2::ggplot() + 
+                     msdr::geom_timeline(aes(x = DATE,
+                                             y = COUNTRY,
+                                             size = EQ_PRIMARY,
+                                             color = TOTAL_DEATHS))
+
+# Adding the labels annotation using ggplot2::layer
+simple_plot +
+     ggplot2::layer(geom = GeomTimelineLabel,
+                    mapping = aes(x     = DATE,
+                                  label = LOCATION,
+                                  y     = COUNTRY,
+                                  mag   = EQ_PRIMARY,
+                                  color = TOTAL_DEATHS,
+                                  n_max = 10),
+                    data = df_clean,
+                    stat = 'identity',
+                    position = 'identity',
+                    show.legend = NA,
+                    inherit.aes = TRUE,
+                    params = list(na.rm = FALSE)) + theme_msdr()
+```
+
+
