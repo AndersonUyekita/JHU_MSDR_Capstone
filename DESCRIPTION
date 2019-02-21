@@ -16,8 +16,12 @@ Imports: dplyr,
        stringr,
        kableExtra,
        rlang,
-       scales
+       scales,
+       prettydoc
 LazyData: true
-Suggests: knitr, rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

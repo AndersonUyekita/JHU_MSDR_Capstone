@@ -45,7 +45,7 @@ This function has two behaviours:
 
 ```
 # Loading the 'signif.txt' file.
-eq_clean_data(file_name = 'signif.txt')
+eq_clean_data(file_name = system.file("extdata", "signif.txt", package = "msdr"))
 ```
 
 2) When you pipe a dataset already loaded.
@@ -60,14 +60,16 @@ readr::read_delim("signif.txt",
 
 This function also loads the Earthquake database from NOAA.
 
-```
-#{r, message=FALSE,warning=FALSE, echo=FALSE}
+```{r, message=FALSE,warning=FALSE, echo=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
 # Loading the dataset of Earthquake.
-df <- readr::read_delim(file = "../inst/extdata/signif.txt",   # file's names
-                                      delim = '\t',       # Kind of delimiter
-                                      col_names = TRUE,   #
-                                      progress = FALSE,   #
-                                      col_types = readr::cols()) #)
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
 
 # Printing the first 5 rows.
 head(df) %>%
@@ -84,8 +86,7 @@ The `eq_clean_data` creates the DATE variable binding the columns YEAR, MONTH, a
 
 [lubridate_url]: https://lubridate.tidyverse.org
 
-```
-#{r}
+```{r}
 # Creating a new feature.
 df <- df %>%
        mutate(DATE = lubridate::ymd(paste(df$YEAR,      # YEAR column
@@ -113,14 +114,13 @@ I have removed:
 
 How to load a `txt` file.
 
-```
-#{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
 # Load the package
 library(msdr)
 
 # Define as file_name the txt file.
-df <- eq_clean_data(file_name = '../inst/extdata/signif.txt')
+df <- eq_clean_data(file_name = raw_data_path)
 
 # Dimensions of the loaded dataframe.
 dim(df)
@@ -131,14 +131,13 @@ dim(df)
 
 Piping a dataset to the `eq_clean_data`.
 
-```
-#{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
 # Load the package
 library(msdr)
 
 # Piping a read_delim with eq_clean_data.
-readr::read_delim("../inst/extdata/signif.txt",
+readr::read_delim(raw_data_path,
                   delim = "\t") %>%
        
               eq_clean_data() -> df
