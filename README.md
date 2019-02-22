@@ -26,9 +26,7 @@ devtools::install_github("AndersonUyekita/JHU_MSDR_Capstone")
 
 I have disclosed the principal Vignette in the RPubs.
 
-[RPubs][rpubs_url]
-
-[rpubs_url]: http://rpubs.com/AndersonUyekita/vignette_mastering_software_development_in_r
+* <a href="http://rpubs.com/AndersonUyekita/vignette_mastering_software_development_in_r" target="_blank">MSDR Vignette</a>
 
 #### Bookdown
 
@@ -36,13 +34,83 @@ _Underconstruction._
 
 ********************************************************************************
 
-##
+## Introduction
 
+This package is the outcome of the Mastering Software Development in R Capstone.
 
+#### Description
 
+The package is tailored to work with the [NOAA][noaa_website] (National Oceanic Atmospheric Administration) [Earthquake database][noaa_earthquake].
 
-##
+[noaa_website]: https://www.ngdc.noaa.gov
+[noaa_earthquake]: https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1
 
+#### Objectivies
+
+Development a new package capable to plot a timeline using the ggplot2 as bedrock. I have also created a function to deal with maps ([OpenStreet maps][openstreet_url]) and earthquake information.
+
+[openstreet_url]: https://www.openstreetmap.org
+
+## Examples
+
+Some simple examples using the package.
+
+#### Timeline
+
+This example shows how to use `eq_clean_data`, `geom_timeline`, `geom_timeline_label`, and `theme_msdr`.
+
+```r
+# Loading the data.
+df_clean <- eq_clean_data(file_name = raw_data_path)
+
+# Subsetting the df_clean to select some countries in Asia.
+df_asia <- df_clean %>%
+       dplyr::filter(COUNTRY %in% c("INDONESIA","THAILAND", "MYANMAR (BURMA)", "JAPAN"),
+                     YEAR > 2000 & YEAR <= 2019)
+
+# Plotting.
+df_asia %>%
+       ggplot2::ggplot() +
+              # Defining the aes.
+              geom_timeline(aes(x = DATE,
+                                y = COUNTRY,
+                                size = EQ_PRIMARY,
+                                color = TOTAL_DEATHS) +
+       # Adding theme
+       msdr::theme_msdr() +
+              # Editing the legends' titles
+              labs(color = "# deaths",
+                   size = "Richter scale value") +
+
+       # Adding annotations
+       geom_timeline_label(aes(x = DATE,
+                               label = LOCATION,
+                               y = COUNTRY,
+                               mag = EQ_PRIMARY,
+                               n_max = 10))
+```
+
+<img src="01-img/01.png"/>
+
+You can find more examples of use in the vignette.
+
+#### OpenStreet Maps and Annotations
+
+This example makes use of `eq_map` and `eq_create_label`.
+
+```r
+# Creating a new data.
+df_america <- df_clean %>% dplyr::filter(COUNTRY %in% c('USA','MEXICO','CANADA'),
+                                         YEAR > 1990 & YEAR < 2019)
+
+# Creating a complex texts using the eq_create_label.
+df_america %>%
+       dplyr::mutate(popup_text = eq_create_label(.)) %>%
+              eq_map(annot_col = 'popup_text')
+```
+<img src="01-img/02.png"/>
+
+You can also find more examples in the vignette.
 
 ***
 
@@ -199,10 +267,6 @@ After insert this file the `devtools::check` start to show a `Note`, but you can
 .travis.yml
 ```
 
-
-
-
-
 #### Vignettes
 
 You can create a vignette using the command
@@ -214,7 +278,6 @@ devtools::use_vignette("my-vignette")
 I have prefered create a vignette using the `File > New File > RMarkdown > From Template > Lightweight and Pretty Vignette (HTML)`. This vignette template is nicer than the generic and oldfashioned original template.
 
 However, there is a shortcomming of using prettydoc, because you need to add the package prettydoc in the `DESCRIPTION`, if not the TRAVIS CI will fail, due to the lack of this package when the vignettes will be create.
-
 
 #### Leaflet
 
@@ -268,3 +331,11 @@ As you can see, I need to use html to write all of the content.
 [Source][ref_12]
 
 [ref_12]: https://rstudio.github.io/leaflet/popups.html
+
+#### devtools
+
+Good guide to follow.
+
+[devtools README][ref_21]
+
+[ref_21]: https://github.com/r-lib/devtools/blob/master/README.md
