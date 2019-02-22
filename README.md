@@ -26,6 +26,10 @@ devtools::install_github("AndersonUyekita/JHU_MSDR_Capstone")
 
 I have disclosed the principal Vignette in the RPubs.
 
+[RPubs][rpubs_url]
+
+[rpubs_url]: http://rpubs.com/AndersonUyekita/vignette_mastering_software_development_in_r
+
 #### Bookdown
 
 _Underconstruction._
@@ -40,8 +44,11 @@ _Underconstruction._
 ##
 
 
+***
 
 ## References
+
+Soon I will move it to the Bookdown.
 
 #### The Complete ggplot2 Tutorial - Part 2 | How To Customize ggplot2 (Full R code)
 
