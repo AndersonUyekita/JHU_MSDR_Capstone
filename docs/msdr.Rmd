@@ -1,0 +1,259 @@
+---
+title: "Mastering Software Development in R"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  
+  options(warn=-1)
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+library(ggplot2)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+    - [1.1. Timeline Plots](#timeline)
+    - [1.2. OpenStreet Maps](#openstreet)
+- [2. MSDR Package](#msdr_package)
+- [3. Usage](#usage)
+    - [3.1. Loading Data](#loading_data)
+    - [3.2. My first geom_timeline plot](#first_geom_timeline)
+    - [3.3. Adding Annotations](#annotations)
+    - [3.4. Earthquakes Info in OpenStreet maps](#openstreet_1)
+    - [3.5. Earthquakes Popup in OpenStreet maps](#openstreet_2)
+
+# 1. Introduction {#intro}
+
+This collection of functions aims to enhance the visual experience of earthquakes. There are two kinds of functions:
+
+1) Timeline based, and;
+2) [OpenStreet][url_openstreet_site] Maps based.
+
+[url_openstreet_site]: https://www.openstreetmap.org/
+
+### Timeline Graphics {#timeline}
+
+Draw a timeline point out each earthquake as a circle, the radius varies according to the magnitude (on Richter  scale). For each country (or category) there is a dedicated timeline. The user could use the function of annotation to highlight the strongest earthquakes from that database.
+
+### OpenStreet Maps Plots {#openstreet}
+
+This is an OpenStreet Map based plot, I have used the `LONGITUDE` and `LATITUDE` to plot circle as an earthquake, which the radius is according to the magnitude (in [Richter  scale][richter_scale]). By the using of the `eq_create_label`, it is possible to assign for each circle a popup to show information.
+
+[richter_scale]: https://simple.wikipedia.org/wiki/Richter_scale
+
+# 2. MSDR Package {#msdr_package}
+
+The functions avaliable in this package:
+
+* eq_clean_data
+* eq_create_label
+* eq_location_clean
+* eq_map
+* geom_timeline
+* geom_timeline_label
+* theme_msdr
+
+A brief description of each of these functions.
+
+### `eq_clean_data`
+
+This function loads a given file_name and then performs the data cleaning. Undercover of this process these functions call the `eq_location_clean` to creates a new column called `LOCATION`.
+
+### `eq_create_label`
+
+Combines three columns to creates a new one with `HTML` structure, this is necessary because the Leaflet package requires the data to be displayed inside of the popup as HTML format.
+
+### `eq_location_clean`
+
+Adds the `LOCATION` column. The dataset must have the `LOCATION_NAME`. If not the function will not work properly.
+
+### `eq_map`
+
+Draw an OpenStreet Map and circles representing the earthquake's location. The popups show the date of the event. All this feature built over the [Leaflet][url_leaflet] package.
+
+[url_leaflet]: https://rstudio.github.io/leaflet/
+
+### `geom_timeline`
+
+Plot a timeline based on magnitude (`EQ_PRIMARY`) and total deaths (`TOTAL_DEATHS`).
+
+### `geom_timeline_label`
+
+Given a plot of `geom_timeline`, this function annotates labels to the `n_max` earthquakes with the highest magnitude (`EQ_PRIMARY`).
+
+### `theme_msdr`
+
+A helper function to remove the background, grid, axis ticks, etc. Aims to increase the ink ratio of the plot.
+
+
+There are two more functions, but these two has its works hidden.
+
+### `GeomTimeline`
+
+Creates all visuals to be plotted by the `geom_timeline`.
+
+### `GeomTimelineLabel`
+
+Creates all visuals to be plotted by the `geom_timeline_label`.
+
+For further understanding, I kindly as you to visit the dedicated vignette of each function.
+
+# 3. Usage {#usage}
+
+This package is tailored to work with the [NOAA][noaa_url] (National Oceanic and Atmospheric Administration) [database of the earthquake][noaa_earthquake]. I have inserted in this package the entire database (downloaded in february/2019), you can access it creating the path and later loading it.
+
+[noaa_url]: https://www.ngdc.noaa.gov
+[noaa_earthquake]: https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1
+
+
+```{r, message=FALSE,warning=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+```
+
+For the sake of this vignette, I have used this dataset to perform the desmonstrations.
+
+## 3.1. Loading the NOAA Database {#loading_data}
+
+The loading process could be done using the `eq_clean_data`.
+
+```{r, message=FALSE,warning=FALSE}
+# Loading the data.
+df_clean <- eq_clean_data(file_name = raw_data_path)
+```
+
+After that, the `df_clean` has LOCATION column, LONGITUDE, LATITUDE, etc. converted to the proper class type.
+
+
+```{r,echo=FALSE}
+# Subsetting the df_clean. Showing only data of interest.
+df_clean %>% dplyr::select(DATE,
+                           COUNTRY, 
+                           LOCATION,
+                           EQ_PRIMARY,
+                           TOTAL_DEATHS) %>% head(10) %>% kableExtra::kable()
+```
+
+The table above is an example of the output of the `eq_clean_data`. Bear in mind, I have only converted and cleaned the columns of interest (`LATITUDE`, `LONGITUDE`, `DATE`, `COUNTRY`, `LOCATION`, `EQ_PRIMARY`, and `TOTAL_DEATHS`).
+
+_ATTENTION:_ The `eq_location_clean` works internally of the `eq_clean_data`, as a step of data manipulation.
+
+## 3.2. Creating my first geom_timeline {#first_geom_timeline}
+
+This is a straightforward application of the `geom_timeline` function. Before any plot, I have chosen Asia as my interest in analysis.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Subsetting the df_clean to select some countries in Asia.
+df_asia <- df_clean %>% 
+       dplyr::filter(COUNTRY %in% c("INDONESIA","THAILAND", "MYANMAR (BURMA)", "JAPAN"),
+                     YEAR > 2000 & YEAR <= 2019)
+
+# Creaing a ggplot object using the geom_timeline.
+df_asia %>%
+       ggplot2::ggplot() +
+              # Defining the aes.
+              geom_timeline(aes(x = DATE,
+                                y = COUNTRY,
+                                size = EQ_PRIMARY,
+                                color = TOTAL_DEATHS)) -> tl_asia
+
+# Plotting
+tl_asia
+```
+
+To enhance the visuals, I have created the `theme_msdr`, which removes the background, grids, etc..
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Plotting with tailored theme.
+tl_asia + msdr::theme_msdr() -> tl_asia_w_theme
+
+tl_asia_w_theme
+```
+
+You can go also further editing the general aspects of the plot using the regular functions of `ggplot2` package. In the example below I have edited the legends' titles.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Plotting with tailored theme.
+tl_asia_w_theme + 
+       msdr::theme_msdr() + 
+              # Editing the legends' titles 
+              labs(color = "# deaths",
+                   size = "Richter scale value") -> tl_asia_w_theme_labs
+
+tl_asia_w_theme_labs
+```             
+
+## 3.3. Adding annotations {#annotations}
+
+In a way to highlight the strongest events in the given dataframe of analysis. The `geom_timeline_label` is a complementary function to the `geom_timeline`. It will annotate which earthquake from the plot was in the top five (default but you can edit it defining a value to `n_max`).
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Plotting with tailored theme.
+tl_asia_w_theme_labs +
+       # Adding annotations
+       geom_timeline_label(aes(x = DATE,
+                               label = LOCATION,
+                               y = COUNTRY,
+                               mag = EQ_PRIMARY,
+                               n_max = 10)) -> tl_asia_w_theme_labs_annot
+
+tl_asia_w_theme_labs_annot
+``` 
+
+## 3.4. Earthquakes Info in OpenStreet maps {#openstreet_1}
+
+The `msdr` package has two features to be used in OpenStreet maps, the first one is a straightforward way to plot the earthquakes, and a single content in a popup.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Using the cleaned dataset of asia. Plotting DATE inside of the popups.
+df_asia %>% 
+       eq_map(annot_col = 'DATE')
+```
+
+In the example above, I have plotted the `DATE` of each earthquake. If you are going to use numeric variables, I kindly ask you to use `as.character` to convert the information in character.
+
+Example using a native non-character feature.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Using the cleaned dataset of asia. Plotting the TOTAL_DEATHS inside of the popups.
+df_asia %>% 
+       eq_map(annot_col = 'as.character(TOTAL_DEATHS)')
+```
+
+## 3.5. Earthquakes Popup in OpenStreet maps {#openstreet_2}
+
+This is a step further of the simple `eq_map` function. The `eq_create_label` combine many columns into one column to plot it inside of a popup of OpenStreet maps.
+
+```{r,message=FALSE,warning=FALSE,out.width="100%",fig.height=3.5}
+# Creating a new data.
+df_america <- df_clean %>% dplyr::filter(COUNTRY %in% c('USA','MEXICO','CANADA'),
+                                         YEAR > 1990 & YEAR < 2019)
+
+# Creating a complex texts using the eq_create_label.
+df_america %>% 
+       dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+              eq_map(annot_col = 'popup_text')
+```

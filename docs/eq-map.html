@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 7 eq_map | MSDR Package Documentation</title>
+  <meta name="description" content="This package aims to enhance the user’s experience with a new geom of ggplot2 and an interactive map.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 7 eq_map | MSDR Package Documentation" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This package aims to enhance the user’s experience with a new geom of ggplot2 and an interactive map." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 eq_map | MSDR Package Documentation" />
+  
+  <meta name="twitter:description" content="This package aims to enhance the user’s experience with a new geom of ggplot2 and an interactive map." />
+  
+
+<meta name="author" content="AH Uyekita">
+
+
+<meta name="date" content="2019-02-22">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="geomtimelinelabel.html">
+<link rel="next" href="eq-create-label.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="http://rpubs.com/AndersonUyekita/vignette_mastering_software_development_in_r">Mastering Software Development in R Capstone</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="eq-clean-data.html"><a href="eq-clean-data.html"><i class="fa fa-check"></i><b>1</b> eq_clean_data</a><ul>
+<li class="chapter" data-level="1.1" data-path="eq-clean-data.html"><a href="eq-clean-data.html#load_data"><i class="fa fa-check"></i><b>1.1</b> Loading the data</a></li>
+<li class="chapter" data-level="1.2" data-path="eq-clean-data.html"><a href="eq-clean-data.html#new_features"><i class="fa fa-check"></i><b>1.2</b> Creating new features</a></li>
+<li class="chapter" data-level="1.3" data-path="eq-clean-data.html"><a href="eq-clean-data.html#conversion"><i class="fa fa-check"></i><b>1.3</b> Conversion Process</a></li>
+<li class="chapter" data-level="1.4" data-path="eq-clean-data.html"><a href="eq-clean-data.html#cleaning"><i class="fa fa-check"></i><b>1.4</b> Cleaning Process</a></li>
+<li class="chapter" data-level="1.5" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_1"><i class="fa fa-check"></i><b>1.5</b> Example 1</a></li>
+<li class="chapter" data-level="1.6" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_2"><i class="fa fa-check"></i><b>1.6</b> Example 2</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="eq-location-clean.html"><a href="eq-location-clean.html"><i class="fa fa-check"></i><b>2</b> eq_location_clean</a><ul>
+<li class="chapter" data-level="2.1" data-path="eq-location-clean.html"><a href="eq-location-clean.html#intro"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="eq-location-clean.html"><a href="eq-location-clean.html#example"><i class="fa fa-check"></i><b>2.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="geom-timeline.html"><a href="geom-timeline.html"><i class="fa fa-check"></i><b>3</b> geom_timeline</a><ul>
+<li class="chapter" data-level="3.1" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_1"><i class="fa fa-check"></i><b>3.1</b> Example 1</a></li>
+<li class="chapter" data-level="3.2" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_2"><i class="fa fa-check"></i><b>3.2</b> Example 2</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="geomtimeline.html"><a href="geomtimeline.html"><i class="fa fa-check"></i><b>4</b> GeomTimeline</a><ul>
+<li class="chapter" data-level="4.1" data-path="eq-location-clean.html"><a href="eq-location-clean.html#example"><i class="fa fa-check"></i><b>4.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="geom-timeline-label.html"><a href="geom-timeline-label.html"><i class="fa fa-check"></i><b>5</b> geom_timeline_label</a><ul>
+<li class="chapter" data-level="5.1" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_1"><i class="fa fa-check"></i><b>5.1</b> Example 1</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="geomtimelinelabel.html"><a href="geomtimelinelabel.html"><i class="fa fa-check"></i><b>6</b> GeomTimelineLabel</a><ul>
+<li class="chapter" data-level="6.1" data-path="eq-location-clean.html"><a href="eq-location-clean.html#example"><i class="fa fa-check"></i><b>6.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="eq-map.html"><a href="eq-map.html"><i class="fa fa-check"></i><b>7</b> eq_map</a><ul>
+<li class="chapter" data-level="7.1" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_1"><i class="fa fa-check"></i><b>7.1</b> Example 1</a></li>
+<li class="chapter" data-level="7.2" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_2"><i class="fa fa-check"></i><b>7.2</b> Example 2</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="eq-create-label.html"><a href="eq-create-label.html"><i class="fa fa-check"></i><b>8</b> eq_create_label</a><ul>
+<li class="chapter" data-level="8.1" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_1"><i class="fa fa-check"></i><b>8.1</b> Example 1</a></li>
+<li class="chapter" data-level="8.2" data-path="eq-clean-data.html"><a href="eq-clean-data.html#example_2"><i class="fa fa-check"></i><b>8.2</b> Example 2</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="theme-msdr.html"><a href="theme-msdr.html"><i class="fa fa-check"></i><b>9</b> theme_msdr</a><ul>
+<li class="chapter" data-level="9.1" data-path="eq-location-clean.html"><a href="eq-location-clean.html#example"><i class="fa fa-check"></i><b>9.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/AndersonUyekita/JHU_MSDR_Capstone" target="_blank">Github</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MSDR Package Documentation</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="eq_map" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> eq_map</h1>
+<p>This function plots circles on OpenStreetMaps, which represents earthquakes. When you click in it appaers a popup, which shows a single information (that you define as <code>annot_col</code>).</p>
+<div id="example_1" class="section level2">
+<h2><span class="header-section-number">7.1</span> Example 1</h2>
+<p>Plotting circles and popup Date of earthquake.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Path to the raw data.</span>
+raw_data_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;signif.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;msdr&quot;</span>)
+
+<span class="co"># Loading the dataset of Earthquake.</span>
+df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_delim</span>(<span class="dt">file =</span> raw_data_path,      
+                        <span class="dt">delim =</span> <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>,              
+                        <span class="dt">col_names =</span> <span class="ot">TRUE</span>,          
+                        <span class="dt">progress =</span> <span class="ot">FALSE</span>,           
+                        <span class="dt">col_types =</span> readr<span class="op">::</span><span class="kw">cols</span>())
+
+<span class="co"># Ploting all earthquakes from 1500 to 1700.</span>
+df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">       </span><span class="co"># Converting data, cleaning and creating.</span>
+<span class="st">       </span><span class="kw">eq_clean_data</span>() <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="co">#Filtering.</span>
+<span class="st">              </span><span class="kw">filter</span>(YEAR <span class="op">&gt;</span><span class="st"> </span><span class="dv">1500</span> <span class="op">&amp;</span>
+<span class="st">                     </span>YEAR <span class="op">&lt;</span><span class="st"> </span><span class="dv">1700</span>) <span class="op">%&gt;%</span>
+<span class="st">                            </span><span class="co"># Adding circles and popups.</span>
+<span class="st">                            </span><span class="kw">eq_map</span>(<span class="dt">annot_col =</span> <span class="st">&#39;DATE&#39;</span>)</code></pre></div>
+<div id="htmlwidget-060219ed8442c6f36c3d" style="width:100%;height:336px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-060219ed8442c6f36c3d">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[34.8,35.7,35.2,24.6,26.6,25,25.1,26.6,24.1,38,25.3,28.1,23.6,-16.6,35.8,-11.9,34.5,-0.2,37.5,39,34.4,24.1,34.4,-0.2,25,25.1,-12.2,46.3,25.3,24,35.4,48.3,-16.8,-16.6,23.5,19.9,23.6,39.2,-11.9,8.3,21.5,37.2,37.2,35.7,37,-7.941,36.5,39.4,37.5,41.733,46,40.6,32.6,-12.2,11.2,35.3,29.3,5.1,38.2,-1.5,23.5,35.1,7.5,-1.7,-33.4,36,-13.5,42.1,25.4,38.2,34.3,31.5,39.4,-0.2,-14.1,35.5,40.6,35.9,36.3,-1.7,38.6,40.1,40,31.4,25,38.7,-1.3,26.5,38.4,-25.4,45.4,36,-1.2,45.6,-12.1],[110.1,115.3,110.9,102.5,100,98.5,99.1,100.2,102.6,125,100.3,102.1,102.8,-71.3,128.8,-77.6,109.7,-78.6,106.2,119,109,102.7,104,-78.6,98.6,99.9,-77.6,7,100.3,102.8,103.9,15.5,-70.9,-70.8,117.2,110.5,102.8,99,-77.4,-71.8,111.3,127,112.5,139.7,111.9,-79.038,106.3,114.2,105.5,15.35,15.5,114.2,104.1,-77.5,41.7,104.3,111.7,-2.2,46.3,-78.5,116.5,111.1,-72.5,-78.6,-70.6,140,-72,47.7,100.5,28.2,105.5,103.6,115.7,-78.5,-75.8,127.1,48.6,126.5,59.3,-79,142,44.7,117,119.5,101.5,112.7,-78.6,99.9,26.9,-64.8,12.2,111.5,-78.7,15.3,-76.6],[140000,130000,100000,106000,116000,130000,110000,140000,110000,134000,110000,146000,110000,152000,126000,168000,160000,152000,146000,120000,136000,120000,136000,156000,130000,100000,156000,108000,110000,120000,110000,132000,158000,162000,140000,150000,130000,146000,172000,158000,110000,126000,130000,128000,130000,172000,140000,140000,120000,134000,100000,126000,126000,162000,114000,120000,130000,114000,102000,152000,116000,120000,140000,150000,170000,128000,162000,116000,136000,150000,160000,120000,120000,154000,146000,126000,114000,126000,132000,154000,148000,118000,160000,100000,136000,140000,146000,126000,150000,140000,124000,160000,154000,100000,156000],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":1,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},["1501-01-19","1502-10-17","1505-10-16","1507-11-04","1511-11-17","1512-10-08","1514-09-14","1515-06-17","1517-07-12","1518-07-02","1520-03-26","1536-03-19","1539-08-08","1552-07-02","1553-03-02","1555-11-15","1556-01-23","1556-10-17","1561-07-25","1568-04-25","1568-05-15","1571-09-09","1573-01-10","1575-09-08","1577-03-13","1579-12-21","1582-08-15","1584-03-14","1586-04-02","1588-08-09","1590-07-07","1590-09-15","1600-02-19","1600-02-28","1600-09-29","1605-07-13","1606-11-30","1609-07-12","1609-10-20","1610-02-03","1611-09-09","1613-07-16","1614-10-23","1615-06-26","1618-05-20","1619-02-14","1622-10-25","1626-06-28","1627-02-15","1627-07-30","1628-06-17","1628-10-06","1630-01-16","1630-11-27","1631-02-10","1631-07-21","1631-08-14","1636-12-18","1640-02-27","1641-01-10","1641-11-26","1642-06-30","1644-01-16","1645-02-19","1647-05-14","1647-06-16","1650-03-31","1652-06-08","1652-07-13","1653-02-23","1654-07-21","1657-04-21","1658-02-03","1660-10-27","1664-05-12","1664-08-12","1669-01-04","1670-10-30","1673-07-30","1674-08-29","1678-10-02","1679-06-04","1679-09-02","1679-12-16","1680-09-09","1683-11-22","1687-11-22","1688-06-14","1688-07-12","1692-09-13","1695-02-25","1695-05-18","1698-06-20","1699-02-11","1699-07-14"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[-33.4,48.3],"lng":[-79.038,142]}},"evals":[],"jsHooks":[]}</script>
+<p>The popups shows the <code>DATE</code> when you click the circle.</p>
+</div>
+<div id="example_2" class="section level2">
+<h2><span class="header-section-number">7.2</span> Example 2</h2>
+<p>Popup showing the Location of earthquake.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Ploting all earthquakes from 1500 to 1700.</span>
+df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">       </span><span class="co"># Converting data, cleaning and creating.</span>
+<span class="st">       </span><span class="kw">eq_clean_data</span>() <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="co">#Filtering.</span>
+<span class="st">              </span><span class="kw">filter</span>(YEAR <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span> <span class="op">&amp;</span>
+<span class="st">                     </span>YEAR <span class="op">&lt;</span><span class="st"> </span><span class="dv">2019</span>,
+                     COUNTRY <span class="op">%in%</span><span class="st"> &#39;CHILE&#39;</span>) <span class="op">%&gt;%</span>
+<span class="st">                            </span><span class="co"># Adding circles and popups.</span>
+<span class="st">                            </span><span class="kw">eq_map</span>(<span class="dt">annot_col =</span> <span class="st">&#39;LOCATION&#39;</span>)</code></pre></div>
+<div id="htmlwidget-63f3ce8975efa249ade3" style="width:100%;height:336px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-63f3ce8975efa249ade3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[-33.4,-27.35,-27.4,-27.4,-33.05,-18.5,-31.61,-33.32,-18.6,-35,-23,-22,-23.5,-22.1,-33.785,-37.8,-32.4,-25.5,-38.18,-20.52,-26.51,-33.134,-32.663,-34.131,-33.071,-19.022,-30.933,-19.384,-29.67,-27.535,-30.608,-37.695,-38.854,-19.987,-19.78,-32.689,-35.2,-32.625,-17.678,-33.212],[-70.6,-70.35,-70.3,-70.3,-71.63,-71,-71.18,-71.42,-71,-73,-69,-70.5,-67.5,-68.7,-70.112,-72.5,-71.2,-69.2,-73.23,-68.92,-70.54,-73.074,-71.551,-71.618,-72.084,-69.991,-71.22,-69.231,-71.384,-70.586,-71.637,-73.406,-73.155,-69.197,-68.98,-71.695,-72.217,-71.365,-69.591,-70.626],[170000,154000,160000,160000,140000,156000,146000,142000,170000,152000,150000,110000,160000,148000,136000,146000,146000,126000,154000,146000,140000,150000,132000,150000,100000,138000,142000,112000,128000,132000,136000,132000,118000,154000,116000,118000,144000,134000,126000,108000],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":1,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},["Santiago","Copiapo, Vallenar, Huasco, Coquimbo","Copiapo","Copiapo","Valparaiso","Tacna,Arica,Arequipa","Coquimbo","Valparaiso","Arica","Off Central Coast","Chile","Chile","Chile-Argentina","Northern","Chile-Argentina","Central","Central","Catalina, Antofagasta","Central","Pozo Almonte, Oficina Victoria, Arica","Copiapo-Taltai","Off Central Coast, Las Cruces","Valparaiso, Vina Del Mar","Near Central Coast, Santiago-Valparaiso","Central, Valparaiso","Arica, Iquique","Pueblo Nuevo, Coquimbo, La Chimba","Cuya, Huara, Iquique, Pozo Almonte","Coquimbo, La Serena, Ovalle","Copiapo, Taltal","Ovalle, Coquimbo, San Juan","Canete","Carahue, Imperial, Temuco","Tarapaca","Tarapaca","Off Central Coast, Vina Del Mar, Valparaiso","Parral, Santiago","Valparaiso","Arica, Tacna","Santiago"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[-38.854,-17.678],"lng":[-73.406,-67.5]}},"evals":[],"jsHooks":[]}</script>
+<p>In this example I have selected the earthquakes in Chile. The function has autozoom to fit the circles in the view.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="geomtimelinelabel.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="eq-create-label.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["MSDR_Capstone.pdf", "MSDR_Capstone.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

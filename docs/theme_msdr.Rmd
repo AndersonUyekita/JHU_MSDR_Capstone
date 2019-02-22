@@ -1,0 +1,84 @@
+---
+title: "theme_msdr"
+author: "AH Uyekita"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  
+  options(warn=-1)
+)
+```
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(dplyr)
+library(readr)
+library(kableExtra)
+library(msdr)
+library(ggplot2)
+```
+
+## Table of Contents
+
+- [1. Introduction](#intro)  
+- [2. Example](#example)
+
+## 1. Introduction {#intro}
+
+I have decided to create a new theme because it is a good opportunity to doing it so I have used the default theme and I have changed some visuals. As you can see, I have made a great effort to make it be similar to the example posted in class notebooks.
+
+## 2. Example {#example}
+
+Adding theme to a regular plotting of earthquake.
+
+*Without theme:*
+
+```{r,message=FALSE,warning=FALSE}
+# Path to the raw data.
+raw_data_path <- system.file("extdata", "signif.txt", package = "msdr")
+
+# Loading the dataset of Earthquake.
+df <- readr::read_delim(file = raw_data_path,      
+                        delim = '\t',              
+                        col_names = TRUE,          
+                        progress = FALSE,           
+                        col_types = readr::cols())
+
+# Cleaning the data and filtering.
+df %>% 
+       eq_clean_data() %>%
+       
+              filter(COUNTRY %in% 'USA',
+                     YEAR >= 1900 &
+                     YEAR <= 2000) %>%
+              # Creating a ggplot object
+              ggplot() + 
+                     # Using the new Geom
+                     geom_timeline(aes(x     = DATE,
+                                       y     = COUNTRY,
+                                       size  = EQ_PRIMARY,
+                                       color = TOTAL_DEATHS)) -> earthquake_usa_1900_2000
+
+# Plotting
+earthquake_usa_1900_2000
+```
+
+*Adding theme:*
+
+```{r,message=FALSE,warning=FALSE}
+# Adding theme.
+earthquake_usa_1900_2000 + theme_msdr()
+```
