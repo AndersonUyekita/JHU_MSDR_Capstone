@@ -16,8 +16,11 @@
 You can use this package installing it by the use of [`devtools`][url_devtools] library from R.
 
 ```
-# R terminal
+# Downloading the package
 devtools::install_github("AndersonUyekita/JHU_MSDR_Capstone")
+
+# Loading the library
+library(msdr)
 ```
 
 [url_devtools]: https://cran.r-project.org/web/packages/devtools/index.html
@@ -30,7 +33,9 @@ I have disclosed the principal Vignette in the RPubs.
 
 #### Bookdown
 
-_Underconstruction._
+The Bookdown is a compendium of all functions of this package.
+
+* <a href="https://andersonuyekita.github.io/JHU_MSDR_Capstone/" target="_blank">MSDR Capstone Bookdown</a>
 
 ********************************************************************************
 
@@ -45,11 +50,63 @@ The package is tailored to work with the [NOAA][noaa_website] (National Oceanic 
 [noaa_website]: https://www.ngdc.noaa.gov
 [noaa_earthquake]: https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1
 
+This database has 6,086 observations and 47 features (database downloaded in 20/feb/2019), which 4,283 observations are about earthquake and 1,803 with `FLAG_TSUNAMI` as true.
+
+From this 4,283 observations, there are 27 with negative `YEAR` and 4,256 with positives values. Finally, from this last subset 1,305 observations have no `EQ_PRIMARY` (Magnitude in [Richter Scale][ritcher_scale]), which means they are recorded as `NA`, so there are only 2,951 valid observations.
+
+[ritcher_scale]: https://simple.wikipedia.org/wiki/Richter_scale
+
 #### Objectivies
 
 Development a new package capable to plot a timeline using the ggplot2 as bedrock. I have also created a function to deal with maps ([OpenStreet maps][openstreet_url]) and earthquake information.
 
 [openstreet_url]: https://www.openstreetmap.org
+
+#### Functionalities
+
+The package has 6 functions, which could be easily used, 2 functions with some restrictions of use (because it is not so easy to use), and 1 theme.
+
+##### `eq_clean_data`
+
+This function loads a given file_name and then performs the data cleaning. Undercover of this process these functions call the `eq_location_clean` to creates a new column called `LOCATION`.
+
+Have in mind, this function also perfoms the conversion of data to the proper class type.
+
+##### `eq_create_label`
+
+Combines three columns to creates a new one with `HTML` structure, this is necessary because the Leaflet package requires the data to be displayed inside of the popup as HTML format.
+
+##### `eq_location_clean`
+
+Adds the `LOCATION` column. The dataset must have the `LOCATION_NAME`. If not the function will not work properly.
+
+##### `eq_map`
+
+Draw an OpenStreet Map and circles representing the earthquake's location. The popups show the date of the event. All this feature built over the [Leaflet][url_leaflet] package.
+
+[url_leaflet]: https://rstudio.github.io/leaflet/
+
+##### `geom_timeline`
+
+Plot a timeline based on magnitude (`EQ_PRIMARY`) and total deaths (`TOTAL_DEATHS`).
+
+##### `geom_timeline_label`
+
+Given a plot of `geom_timeline`, this function annotates labels to the `n_max` earthquakes with the highest magnitude (`EQ_PRIMARY`).
+
+##### `theme_msdr`
+
+A theme to remove the background, grid, axis ticks, etc. Aims to increase the ink ratio of the plot.
+
+There are two more functions, but these two has its works "hidden".
+
+##### `GeomTimeline`
+
+Creates all visuals to be plotted by the `geom_timeline`.
+
+##### `GeomTimelineLabel`
+
+Creates all visuals to be plotted by the `geom_timeline_label`.
 
 ## Examples
 
@@ -92,7 +149,7 @@ df_asia %>%
 
 <img src="01-img/01.png"/>
 
-You can find more examples of use in the vignette.
+You can find more examples of use in the [vignette][vignette_rpubs] or in the [Bookdown][bookdown_url].
 
 #### OpenStreet Maps and Annotations
 
@@ -110,232 +167,8 @@ df_america %>%
 ```
 <img src="01-img/02.png"/>
 
-You can also find more examples in the vignette.
+You can also find more examples in the [vignette][vignette_rpubs] or in the [Bookdown][bookdown_url].
 
-***
 
-## References
-
-Soon I will move it to the Bookdown.
-
-#### The Complete ggplot2 Tutorial - Part 2 | How To Customize ggplot2 (Full R code)
-
-[Source][ref_19]
-
-[ref_19]: http://r-statistics.co/Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html
-
-#### Extension of ggplot2
-
-This post is the most informative. Has a lot of examples. The best one is that of new points_geom.
-
-[Source][ref_16]
-
-[ref_16]: https://cran.r-project.org/web/packages/ggplot2/vignettes/extending-ggplot2.html
-
-
-#### Write your own R package, Part Two
-
-[Source][ref_15]
-
-[ref_15]: http://stat545.com/packages05_foofactors-package-02.html
-
-
-#### Line Grob
-
-The simplest documentation aboute Line Grob.
-
-[Source][ref_14]
-
-[ref_14]: https://stat.ethz.ch/R-manual/R-devel/library/grid/html/grid.lines.html
-
-#### Theme
-
-General information about theme. It is very good because has all components names.
-
-[Source 1][ref_17]
-[Source 2][ref_18]
-
-[ref_17]: https://ggplot2.tidyverse.org/reference/element.html
-[ref_18]: https://ggplot2.tidyverse.org/reference/theme.html
-
-
-#### Build a plot layer by layer
-
-This post in RPubs was very informative to understand how to plot a `Geom` without the use of a `geom_*`.
-
-The excert I have read:
-
-```r
-p + layer(
-  mapping = NULL,
-  data = NULL,
-  geom = "point", geom_params = list(),
-  stat = "identity", stat_params = list(),
-  position = "identity"
-)
-```
-I have plotted some graphics in this way above.
-
->mapping: A set of aesthetic mappings, specified using the aes() function and combined with the plot defaults as described in aesthetic mappings. If NULL, uses the default mapping set in ggplot().
-
-This part is the most important for me. We I have realized how to plot my own `geoms` using `ggplot2::layer()`.
-
-[Source][ref_07]
-
-[ref_07]: https://rpubs.com/hadley/ggplot2-layers
-
-
-#### Data in Packages
-
-I have read something interesting in the Karl Broman website about how to store raw data in a Package.
-
-[Source 1][ref_03]
-[Source 2][ref_04]
-
-[ref_03]: http://kbroman.org/pkg_primer/pages/data.html
-[ref_04]: https://github.com/kbroman/qtlcharts/tree/master/R
-
-Other source I have found is the Hadley website. This one talk about the raw data and internal data.
-
-[Source 3][ref_05]
-
-[ref_05]: http://r-pkgs.had.co.nz/data.html
-
-Kassambara also has a good site.
-
-[Source 4][ref_06]
-
-[ref_06]: http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
-
-#### testthat
-
-```r
-# Creates a generic test file.
-usethis::use_test("name")
-```
-
-[testthat][ref_01]
-
-[ref_01]: https://testthat.r-lib.org
-
-I have tested my package using the function:
-
-```r
-# Run all test files in the path `tests/testthat`
-test_dir(path = 'tests/testthat')
-```
-Reading the book from Peng R. I have used this part to create my own tests.
-
-```r
-test_that("model fitting", {
-        data(airquality)
-        fit <- lm(Ozone ~ Wind, data = airquality)
-        expect_that(fit, is_a("lm"))
-        expect_that(1 + 1, equals(2))
-})
-```
-[Source - 3.6.1][ref_08]
-
-[ref_08]: https://bookdown.org/rdpeng/RProgDA/software-testing-framework-for-r-packages.html
-
-
-#### Tracis CI
-
-I have added manually the file `.travis.yml` using the terminal
-
-```
-touch .travis.yml
-```
-Later I have edited this file and inserted
-```
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
-language: R
-sudo: false
-cache: packages
-```
-[source][ref_02]
-
-[ref_02]: https://docs.travis-ci.com/user/languages/r
-
-After insert this file the `devtools::check` start to show a `Note`, but you can eliminate this `Note` adding to the `.Rbuildignore` the Travis file.
-
-```
-^LICENSE\.md$
-^.*\.Rproj$
-^\.Rproj\.user$
-.travis.yml
-```
-
-#### Vignettes
-
-You can create a vignette using the command
-
-```r
-# Creates a vignette called `my-vignette`
-devtools::use_vignette("my-vignette")
-```
-I have prefered create a vignette using the `File > New File > RMarkdown > From Template > Lightweight and Pretty Vignette (HTML)`. This vignette template is nicer than the generic and oldfashioned original template.
-
-However, there is a shortcomming of using prettydoc, because you need to add the package prettydoc in the `DESCRIPTION`, if not the TRAVIS CI will fail, due to the lack of this package when the vignettes will be create.
-
-#### Leaflet
-
-This package is in charge of plot maps. Generic plot:
-
-```r
-m <- leaflet()
-m <- addTiles(m)
-m <- addMarkers(m, lng=174.768, lat=-36.852, popup="The birthplace of R")
-m
-```
-[Source][ref_09]
-
-[ref_09]: http://rstudio.github.io/leaflet/
-
-*Plotting Circles*
-
-This site shows how to plot circles.
-
-```r
-leaflet(cities) %>% addTiles() %>%
-  addCircles(lng = ~Long, lat = ~Lat, weight = 1,
-    radius = ~sqrt(Pop) * 30, popup = ~City
-  )
-```
-[Source 1][ref_10]
-[Source 2][ref_11]
-
-[ref_10]: https://rstudio.github.io/leaflet/shapes.html
-[ref_11]: https://rstudio.github.io/leaflet/markers.html
-
-*Content in Popup*
-
-This website shows how to plot several information in a bubble.
-
-```
-content <- paste(sep = "<br/>",
-  "<b><a href='http://www.samurainoodle.com'>Samurai Noodle</a></b>",
-  "606 5th Ave. S",
-  "Seattle, WA 98138"
-)
-
-leaflet() %>% addTiles() %>%
-  addPopups(-122.327298, 47.597131, content,
-    options = popupOptions(closeButton = FALSE)
-  )
-```
-
-As you can see, I need to use html to write all of the content.
-
-[Source][ref_12]
-
-[ref_12]: https://rstudio.github.io/leaflet/popups.html
-
-#### devtools
-
-Good guide to follow.
-
-[devtools README][ref_21]
-
-[ref_21]: https://github.com/r-lib/devtools/blob/master/README.md
+[vignette_rpubs]: http://rpubs.com/AndersonUyekita/vignette_mastering_software_development_in_r
+[bookdown_url]: https://andersonuyekita.github.io/JHU_MSDR_Capstone/
